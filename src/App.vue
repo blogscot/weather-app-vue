@@ -20,6 +20,9 @@
 <script>
 import Weather from "./components/Weather";
 
+// const devServer = null;
+const devServer = "http://localhost:3000/weather";
+
 const states = [
   "SeekingPermission",
   "PermissionRejected",
@@ -73,12 +76,10 @@ export default {
       }
     },
     async fetchWeatherData() {
-      // const response = await fetch(this.weatherAPIURL).then(response =>
-      const response = await fetch(devServerURL).then(response =>
-        response.json()
+      const response = await fetch(devServer || this.weatherAPIURL).then(
+        response => response.json()
       );
-      // return response;
-      return response[0];
+      return response;
     }
   },
   data() {
