@@ -1,11 +1,27 @@
 <template>
   <div id="app">
-    <Weather minmax :main="weather.main" :dt="weather.dt" :sys="weather.sys"></Weather>
+    <Weather
+      v-if="state == 'Loaded'"
+      minmax
+      :main="weather.main"
+      :dt="weather.dt"
+      :sys="weather.sys"
+    ></Weather>
+    <p v-if="state == 'PermissionRejected'">
+      Geo-loacation permission rejected by user
+    </p>
+    <p v-else-if="state == 'Loading'">Loading</p>
   </div>
 </template>
 
 <script>
 import Weather from "./components/Weather";
+
+const states = ["SeekingPermission", "PermissionRejected", "Loading", "Loaded"];
+const SeekingPermission = 0;
+const PermissionRejected = 1;
+const Loading = 2;
+const Loaded = 3;
 
 export default {
   name: "App",
@@ -13,14 +29,27 @@ export default {
     Weather
   },
   async created() {
-    console.log(process.env);
-    this.weather = await this.asyncFetchWeatherData();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        this.getWeatherData,
+        this.permissionRefused
+      );
+    }
   },
   methods: {
     async asyncFetchWeatherData() {
       return new Promise(resolve => {
         setTimeout(() => resolve(this.fetchWeatherData()), 200);
       });
+    },
+    async getWeatherData(position) {
+      this.state = states[Loading];
+      console.log(position);
+      this.weather = await this.asyncFetchWeatherData();
+      this.state = states[Loaded];
+    },
+    permissionRefused() {
+      this.state = states[PermissionRejected];
     },
     fetchWeatherData() {
       return {
@@ -53,6 +82,7 @@ export default {
   },
   data() {
     return {
+      state: states[SeekingPermission],
       weather: {}
     };
   }
