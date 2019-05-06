@@ -33,6 +33,9 @@ const Loading = 2;
 const FetchWeatherDataFailed = 3;
 const Loaded = 4;
 
+const openWeatherMapPrefix = "https://api.openweathermap.org/data/2.5/weather?";
+const devServerURL = "http://localhost:3000/weather";
+
 export default {
   name: "App",
   components: {
@@ -42,7 +45,7 @@ export default {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this.getWeatherData,
-        () => this.state = states[PermissionRejected]
+        () => (this.state = states[PermissionRejected])
       );
     }
   },
@@ -54,7 +57,14 @@ export default {
     },
     async getWeatherData(position) {
       this.state = states[Loading];
-      console.log(position);
+
+      const {
+        coords: { latitude, longitude }
+      } = position;
+      this.weatherAPIURL = `${openWeatherMapPrefix}lat=${latitude}&lon=${longitude}&APPID=${
+        process.env.VUE_APP_WEATHER_API_KEY
+      }`;
+
       try {
         this.weather = await this.asyncFetchWeatherData();
         this.state = states[Loaded];
@@ -63,14 +73,17 @@ export default {
       }
     },
     async fetchWeatherData() {
-      const response = await fetch("http://localhost:3000/weather").then(
-        response => response.json()
+      // const response = await fetch(this.weatherAPIURL).then(response =>
+      const response = await fetch(devServerURL).then(response =>
+        response.json()
       );
+      // return response;
       return response[0];
     }
   },
   data() {
     return {
+      weatherAPIURL: "",
       state: states[SeekingPermission],
       weather: {}
     };
