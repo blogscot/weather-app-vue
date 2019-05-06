@@ -42,7 +42,7 @@ export default {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this.getWeatherData,
-        this.permissionRefused
+        () => this.state = states[PermissionRejected]
       );
     }
   },
@@ -61,9 +61,6 @@ export default {
       } catch (e) {
         this.state = states[FetchWeatherDataFailed];
       }
-    },
-    permissionRefused() {
-      this.state = states[PermissionRejected];
     },
     async fetchWeatherData() {
       const response = await fetch("http://localhost:3000/weather").then(
