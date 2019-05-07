@@ -8,30 +8,41 @@
       :dt="weather.dt"
       :sys="weather.sys"
     ></Weather>
+    <p v-if="state == 'SeekingPermission'">Welcome to the Weather App</p>
+    <p v-if="state == 'GeolocationNotSupported'">Geo-loacation not supported by browser</p>
     <p v-if="state == 'PermissionRejected'">Geo-loacation permission rejected by user</p>
-    <p v-else-if="state == 'FetchWeatherDataFailed'">Failed to fetch weather data. Oh noes!</p>
-    <p v-else-if="state == 'Loading'">Loading</p>
+    <p v-if="state == 'FetchWeatherDataFailed'">Failed to fetch weather data. Oh noes!</p>
+    <p v-if="state == 'Loading'">Loading</p>
   </div>
 </template>
 
 <script>
 import Weather from "./components/Weather";
+import { setInterval } from "timers";
+
+const updateInterval = 20 * 1000;
 
 // const devServer = null;
 const devServer = "http://localhost:3000/weather";
 
+async function delay(amount) {
+  return new Promise(resolve => setTimeout(() => resolve(), amount));
+}
+
 const states = [
   "SeekingPermission",
+  "GeolocationNotSupported",
   "PermissionRejected",
   "Loading",
   "FetchWeatherDataFailed",
   "Loaded"
 ];
 const SeekingPermission = 0;
-const PermissionRejected = 1;
-const Loading = 2;
-const FetchWeatherDataFailed = 3;
-const Loaded = 4;
+const GeolocationNotSupported = 1;
+const PermissionRejected = 2;
+const Loading = 3;
+const FetchWeatherDataFailed = 4;
+const Loaded = 5;
 
 const openWeatherMapPrefix = "https://api.openweathermap.org/data/2.5/weather?";
 
@@ -41,11 +52,21 @@ export default {
     Weather
   },
   async created() {
+    await delay(1000); // Delay for welcome message
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this.getWeatherData,
         () => (this.state = states[PermissionRejected])
       );
+
+      setInterval(() => {
+        navigator.geolocation.getCurrentPosition(
+          this.getWeatherData,
+          () => (this.state = states[PermissionRejected])
+        );
+      }, updateInterval);
+    } else {
+      this.state = states[GeolocationNotSupported];
     }
   },
   methods: {
