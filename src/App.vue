@@ -118,6 +118,11 @@ button {
   margin-bottom: 1rem;
   box-shadow: 2px 2px 4px 0px black;
   outline: none;
+  opacity: 0.3;
+}
+button:hover {
+  opacity: 1;
+  cursor: pointer;
 }
 button:active {
   box-shadow: 2px 2px 4px 0px #444;
