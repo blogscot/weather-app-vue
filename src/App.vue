@@ -1,12 +1,15 @@
 <template>
   <div id="app">
     <button @click="toggleDisplay()" v-if="state == 'Loaded'">{{ displayMode }}</button>
+    <button @click="toggleTempScale()" v-if="state == 'Loaded'">°{{ scale }}</button>
     <Weather
       v-if="state == 'Loaded'"
       :displayMode="displayMode"
+      :temps="temps"
       :main="weather.main"
       :dt="weather.dt"
       :sys="weather.sys"
+      :scale="scale"
     ></Weather>
     <p v-if="state == 'SeekingPermission'">Welcome to the Weather App</p>
     <p v-if="state == 'GeolocationNotSupported'">Geo-loacation not supported by browser</p>
@@ -27,6 +30,18 @@ const devServer = "http://localhost:3000/weather";
 
 async function delay(amount) {
   return new Promise(resolve => setTimeout(() => resolve(), amount));
+}
+
+function toFahrenheit(temp) {
+  return (temp * 9) / 5 + 32;
+}
+
+function toCelcius(temp) {
+  return ((temp - 32) * 5) / 9;
+}
+
+function fromKelvin(temp) {
+  return (temp - 273.15).toFixed(1);
 }
 
 const states = [
@@ -87,6 +102,7 @@ export default {
 
       try {
         this.weather = await this.asyncFetchWeatherData();
+        this.storeTemperatures(this.weather.main);
         this.state = states[Loaded];
       } catch (e) {
         this.state = states[FetchWeatherDataFailed];
@@ -110,14 +126,48 @@ export default {
           this.displayMode = "temp";
           break;
       }
+    },
+    storeTemperatures(main) {
+      const { temp, temp_min, temp_max } = main;
+      this.temps = {
+        current: fromKelvin(temp),
+        min: fromKelvin(temp_min),
+        max: fromKelvin(temp_max)
+      };
+      if (this.scale === "F") {
+        this.temps = {
+          current: toFahrenheit(this.temps.current),
+          min: toFahrenheit(this.temps.min),
+          max: toFahrenheit(this.temps.max)
+        };
+      }
+    },
+    toggleTempScale() {
+      if (this.scale === "C") {
+        this.scale = "F";
+        this.temps = {
+          current: toFahrenheit(this.temps.current),
+          min: toFahrenheit(this.temps.min),
+          max: toFahrenheit(this.temps.max)
+        };
+      } else {
+        this.scale = "C";
+        this.temps = {
+          current: toCelcius(this.temps.current),
+          min: toCelcius(this.temps.min),
+          max: toCelcius(this.temps.max)
+        };
+      }
     }
   },
   data() {
     return {
+      temps: {},
       displayMode: "temp",
-      weatherAPIURL: "",
+      scale: "C",
       state: states[SeekingPermission],
-      weather: {}
+      weather: {},
+      weatherAPIURL: ""
     };
   }
 };
