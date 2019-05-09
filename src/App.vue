@@ -1,21 +1,23 @@
 <template>
   <div id="app">
-    <button @click="toggleDisplay()" v-if="state == 'Loaded'">{{ displayMode }}</button>
-    <button @click="toggleTempScale()" v-if="state == 'Loaded'">°{{ scale }}</button>
-    <Weather
-      v-if="state == 'Loaded'"
-      :displayMode="displayMode"
-      :temps="temps"
-      :main="weather.main"
-      :dt="weather.dt"
-      :sys="weather.sys"
-      :scale="scale"
-    ></Weather>
+    <div v-if="tempsLoaded">
+      <button @click="toggleDisplay()">{{ displayMode }}</button>
+      <button @click="toggleTempScale()">°{{ scale }}</button>
+      <Weather
+        :displayMode="displayMode"
+        :temps="temps"
+        :main="weather.main"
+        :dt="weather.dt"
+        :sys="weather.sys"
+        :scale="scale"
+      ></Weather>
+    </div>
     <p v-if="state == 'SeekingPermission'">Welcome to the Weather App</p>
     <p v-if="state == 'GeolocationNotSupported'">Geo-loacation not supported by browser</p>
     <p v-if="state == 'PermissionRejected'">Geo-loacation permission rejected by user</p>
-    <p v-if="state == 'FetchWeatherDataFailed'">Failed to fetch weather data. Oh noes!</p>
-    <p v-if="state == 'Loading'">Loading</p>
+    <p v-if="state == 'FetchDataFailed'">Failed to fetch weather data. Oh noes!</p>
+    <p v-if="state == 'LoadingData'">Loading weather data</p>
+    <p v-if="state == 'FetchImagesFailed'">Failed to fetch weather images. Oh noes!</p>
   </div>
 </template>
 
@@ -26,24 +28,29 @@ import { toFahrenheit, toCelcius, fromKelvin, delay } from "./utils";
 const updateInterval = 20 * 60 * 1000;
 
 // const devServer = null;
-const devServer = "http://localhost:3000/weather";
+const devServer = "http://localhost:3000";
 
 const states = [
   "SeekingPermission",
   "GeolocationNotSupported",
   "PermissionRejected",
-  "Loading",
-  "FetchWeatherDataFailed",
-  "Loaded"
+  "LoadingData",
+  "FetchDataFailed",
+  "LoadedTemps",
+  "LoadedImages",
+  "FetchImagesFailed"
 ];
 const SeekingPermission = 0;
 const GeolocationNotSupported = 1;
 const PermissionRejected = 2;
-const Loading = 3;
-const FetchWeatherDataFailed = 4;
-const Loaded = 5;
+const LoadingData = 3;
+const FetchDataFailed = 4;
+const LoadedTemps = 5;
+const LoadedImages = 6;
+const FetchImagesFailed = 7;
 
 const openWeatherMapPrefix = "https://api.openweathermap.org/data/2.5/weather?";
+const unsplashAPIPrefix = "https://api.unsplash.com/search/photos?client_id=";
 
 export default {
   name: "App",
@@ -68,14 +75,18 @@ export default {
       this.state = states[GeolocationNotSupported];
     }
   },
+  computed: {
+    tempsLoaded() {
+      return (
+        this.state == "LoadedTemps" ||
+        this.state == "LoadedImages" ||
+        this.state == "FetchImagesFailed"
+      );
+    }
+  },
   methods: {
-    async asyncFetchWeatherData() {
-      return new Promise(resolve => {
-        setTimeout(() => resolve(this.fetchWeatherData()), 200);
-      });
-    },
     async getWeatherData(position) {
-      this.state = states[Loading];
+      this.state = states[LoadingData];
 
       const {
         coords: { latitude, longitude }
@@ -85,18 +96,50 @@ export default {
       }`;
 
       try {
-        this.weather = await this.asyncFetchWeatherData();
+        this.weather = await this.fetchWeatherData();
         this.storeTemperatures(this.weather.main);
-        this.state = states[Loaded];
+        this.state = states[LoadedTemps];
       } catch (e) {
-        this.state = states[FetchWeatherDataFailed];
+        this.state = states[FetchDataFailed];
+      }
+
+      try {
+        const conditions = this.weather.weather[0].main;
+        const images = await this.fetchWeatherImages(conditions);
+
+        const imageData = images.map(image => {
+          const {
+            alt_description,
+            urls: { raw },
+            user: { name },
+            links: { html }
+          } = image;
+          return { alt_description, raw, name, html };
+        });
+        console.log(imageData);
+
+        // TODO:
+        // 1. get the window size
+        // 2. build url for new unsplash image (use first one)
+        // 3. update the page's background image
+
+        this.state = states[LoadedImages];
+      } catch (e) {
+        this.state = states[FetchImagesFailed];
       }
     },
     async fetchWeatherData() {
-      const response = await fetch(devServer || this.weatherAPIURL).then(
+      return await fetch(`${devServer}/weather` || this.weatherAPIURL).then(
         response => response.json()
       );
-      return response;
+    },
+    async fetchWeatherImages(conditions) {
+      const clientID = process.env.VUE_APP_UNSPLASH_CLIENT_ID;
+      const unsplashAPIURL = `${unsplashAPIPrefix}${clientID}&query=${conditions}`;
+      const response = await fetch(
+        `${devServer}/unsplash` || unsplashAPIURL
+      ).then(response => response.json());
+      return response.results;
     },
     toggleDisplay() {
       switch (this.displayMode) {
