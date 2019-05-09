@@ -1,9 +1,6 @@
 <template>
   <section v-if="main">
-    <div>
-      Current Temperature: {{ temps.current | round }}
-      °{{ scale }}
-    </div>
+    <div>Current Temperature: {{ temps.current | round }} °{{ scale }}</div>
     <div v-if="displayMode == 'minmax' || displayMode == 'full'">
       <div>Today's Min: {{ temps.min | round }}°{{ scale }}</div>
       <div>Today's Max: {{ temps.max | round }}°{{ scale }}</div>
@@ -77,4 +74,3 @@ section {
   line-height: 1.43;
 }
 </style>
-

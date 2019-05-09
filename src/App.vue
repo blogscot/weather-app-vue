@@ -13,11 +13,19 @@
       ></Weather>
     </div>
     <p v-if="state == 'SeekingPermission'">Welcome to the Weather App</p>
-    <p v-if="state == 'GeolocationNotSupported'">Geo-loacation not supported by browser</p>
-    <p v-if="state == 'PermissionRejected'">Geo-loacation permission rejected by user</p>
-    <p v-if="state == 'FetchDataFailed'">Failed to fetch weather data. Oh noes!</p>
+    <p v-if="state == 'GeolocationNotSupported'">
+      Geo-loacation not supported by browser
+    </p>
+    <p v-if="state == 'PermissionRejected'">
+      Geo-loacation permission rejected by user
+    </p>
+    <p v-if="state == 'FetchDataFailed'">
+      Failed to fetch weather data. Oh noes!
+    </p>
     <p v-if="state == 'LoadingData'">Loading weather data</p>
-    <p v-if="state == 'FetchImagesFailed'">Failed to fetch weather images. Oh noes!</p>
+    <p v-if="state == 'FetchImagesFailed'">
+      Failed to fetch weather images. Oh noes!
+    </p>
   </div>
 </template>
 
