@@ -21,28 +21,12 @@
 
 <script>
 import Weather from "./components/Weather";
-import { setInterval } from "timers";
+import { toFahrenheit, toCelcius, fromKelvin, delay } from "./utils";
 
-const updateInterval = 20 * 1000;
+const updateInterval = 20 * 60 * 1000;
 
 // const devServer = null;
 const devServer = "http://localhost:3000/weather";
-
-async function delay(amount) {
-  return new Promise(resolve => setTimeout(() => resolve(), amount));
-}
-
-function toFahrenheit(temp) {
-  return (temp * 9) / 5 + 32;
-}
-
-function toCelcius(temp) {
-  return ((temp - 32) * 5) / 9;
-}
-
-function fromKelvin(temp) {
-  return (temp - 273.15).toFixed(1);
-}
 
 const states = [
   "SeekingPermission",
@@ -197,5 +181,10 @@ button:hover {
 }
 button:active {
   box-shadow: 2px 2px 4px 0px #444;
+}
+html {
+  background-size: cover;
+  background: url("https://www.eiseverywhere.com/file_uploads/a0488db4ce271e7ba5b8c4c4fff8ba4a_AventriBackgroundBW.jpg")
+    no-repeat center center fixed;
 }
 </style>
