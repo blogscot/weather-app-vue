@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="alert">
     <slot></slot>
   </div>
 </template>
@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style>
-div {
+div.alert {
   display: grid;
   justify-items: center;
   font-size: 1.2rem;
@@ -20,11 +20,11 @@ div {
   color: #fff;
 }
 
-.info {
+div.info {
   background: #2196f3;
 }
 
-.error {
+div.error {
   background: #f44336;
 }
 </style>

@@ -12,25 +12,32 @@
         :scale="scale"
       ></Weather>
     </div>
-    <p v-if="state == 'SeekingPermission'">Welcome to the Weather App</p>
+    <AlertBox v-if="state == 'SeekingPermission'">
+      <p>Welcome to the Weather App</p>
+    </AlertBox>
     <p v-if="state == 'GeolocationNotSupported'">
-      Geo-loacation not supported by browser
+      <AlertBox>
+        <p>Geo-loacation not supported by browser</p>
+      </AlertBox>
     </p>
-    <p v-if="state == 'PermissionRejected'">
-      Geo-loacation permission rejected by user
-    </p>
-    <p v-if="state == 'FetchDataFailed'">
-      Failed to fetch weather data. Oh noes!
-    </p>
-    <p v-if="state == 'LoadingData'">Loading weather data</p>
-    <p v-if="state == 'FetchImagesFailed'">
-      Failed to fetch weather images. Oh noes!
-    </p>
+    <AlertBox class="error" v-if="state == 'PermissionRejected'">
+      <p>Geo-loacation permission rejected by user</p>
+    </AlertBox>
+    <AlertBox class="error" v-if="state == 'FetchDataFailed'">
+      <p>Failed to fetch weather data. Oh noes!</p>
+    </AlertBox>
+    <AlertBox class="info" v-if="state == 'LoadingData'">
+      <p>Loading weather data</p>
+    </AlertBox>
+    <AlertBox class="error" v-if="state == 'FetchImagesFailed'">
+      <p>Failed to fetch weather images. Oh noes!</p>
+    </AlertBox>
   </div>
 </template>
 
 <script>
 import Weather from "./components/Weather";
+import AlertBox from "./components/AlertBox";
 import { toFahrenheit, toCelcius, fromKelvin, delay } from "./utils";
 
 const updateInterval = 20 * 60 * 1000;
@@ -63,6 +70,7 @@ const unsplashAPIPrefix = "https://api.unsplash.com/search/photos?client_id=";
 export default {
   name: "App",
   components: {
+    AlertBox,
     Weather
   },
   async created() {
