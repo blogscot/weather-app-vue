@@ -15,11 +15,9 @@
     <AlertBox v-if="state == 'SeekingPermission'">
       <p>Welcome to the Weather App</p>
     </AlertBox>
-    <p v-if="state == 'GeolocationNotSupported'">
-      <AlertBox>
-        <p>Geo-loacation not supported by browser</p>
-      </AlertBox>
-    </p>
+    <AlertBox v-if="state == 'GeolocationNotSupported'">
+      <p>Geo-loacation not supported by browser</p>
+    </AlertBox>
     <AlertBox class="error" v-if="state == 'PermissionRejected'">
       <p>Geo-loacation permission rejected by user</p>
     </AlertBox>
