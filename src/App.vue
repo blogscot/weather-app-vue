@@ -150,15 +150,15 @@ export default {
       html.style.background = `url(${unsplashImageURL})`;
     },
     async fetchWeatherData() {
-      return await fetch(`${devServer}/weather` || this.weatherAPIURL).then(
-        response => response.json()
-      );
+      return await fetch(
+        devServer ? `${devServer}/weather` : this.weatherAPIURL
+      ).then(response => response.json());
     },
     async fetchWeatherImage(conditions) {
       const clientID = process.env.VUE_APP_UNSPLASH_CLIENT_ID;
       const unsplashAPIURL = `${unsplashAPIPrefix}${clientID}&query=${conditions}`;
       const response = await fetch(
-        `${devServer}/unsplash` || unsplashAPIURL
+        devServer ? `${devServer}/unsplash` : unsplashAPIURL
       ).then(response => response.json());
       return response;
     },
