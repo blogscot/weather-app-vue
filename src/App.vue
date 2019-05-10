@@ -136,8 +136,8 @@ export default {
           } = image;
           return { alt_description, raw, name, html };
         });
-        this.updateBackground(imageData[1]);
-
+        const rand = Math.floor(Math.random() * imageData.length);
+        this.updateBackground(imageData[rand]);
         this.state = states[LoadedImages];
       } catch (e) {
         this.state = states[FetchImagesFailed];
@@ -148,7 +148,6 @@ export default {
       const { width, height } = getDimensions();
       const options = `&q=80&fm=jpg&crop=entropy&cs=tinysrgb&fit=crop&w=${width}&h=${height}`;
       const unsplashImageURL = `${raw}${options}`;
-
       const html = document.querySelector("html");
       html.style.background = `url(${unsplashImageURL})`;
     },
