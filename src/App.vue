@@ -234,7 +234,7 @@ export default {
 }
 button {
   border-radius: 4px;
-  font-size: 18px;
+  font-size: 16px;
   padding: 8px 18px;
   margin-bottom: 1rem;
   box-shadow: 2px 2px 4px 0px black;

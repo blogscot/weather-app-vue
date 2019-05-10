@@ -65,10 +65,10 @@ export default {
 <style>
 section {
   border: rgba(22, 22, 22, 0.4) solid 1px;
-  width: 300px;
+  width: 240px;
   margin: 0 auto;
-  padding: 1.4rem 1.5rem;
-  font-size: 1.2rem;
+  padding: 1rem 1.2rem;
+  font-size: 1rem;
   border-radius: 4px;
   background-color: rgba(255, 255, 221, 0.85);
   line-height: 1.43;
