@@ -4,6 +4,7 @@
       <button @click="toggleDisplay()">{{ displayMode }}</button>
       <button @click="toggleTempScale()">°{{ scale }}</button>
       <Weather
+        :status="weather.weather[0].main"
         :displayMode="displayMode"
         :temps="temps"
         :main="weather.main"

@@ -1,6 +1,7 @@
 <template>
   <section v-if="main">
-    <div>Current Temperature: {{ temps.current | round }} °{{ scale }}</div>
+    <div>Status: {{ status | capitalise }}</div>
+    <div>Temperature: {{ temps.current | round }} °{{ scale }}</div>
     <div v-if="displayMode == 'minmax' || displayMode == 'full'">
       <div>Today's Min: {{ temps.min | round }}°{{ scale }}</div>
       <div>Today's Max: {{ temps.max | round }}°{{ scale }}</div>
@@ -22,6 +23,10 @@
 export default {
   name: "Weather",
   props: {
+    status: {
+      type: String,
+      required: true
+    },
     displayMode: {
       type: String,
       default: "temp"
@@ -57,6 +62,13 @@ export default {
   filters: {
     round(number) {
       return Number(number).toFixed(1);
+    },
+    capitalise: function(value) {
+      return (
+        String(value)
+          .charAt(0)
+          .toUpperCase() + value.slice(1)
+      );
     }
   }
 };
@@ -65,7 +77,7 @@ export default {
 <style>
 section {
   border: rgba(22, 22, 22, 0.4) solid 1px;
-  width: 240px;
+  width: 200px;
   margin: 0 auto;
   padding: 1rem 1.2rem;
   font-size: 1rem;
