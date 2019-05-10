@@ -23,6 +23,3 @@ yarn-error.log*
 
 # My Notes
 *.md
-
-# Dev DB
-db.json
