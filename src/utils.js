@@ -10,6 +10,17 @@ export function fromKelvin(temp) {
   return (temp - 273.15).toFixed(1);
 }
 
+/**
+ *  Pauses for dramatic effect.
+ */
 export async function delay(amount) {
   return new Promise(resolve => setTimeout(() => resolve(), amount));
 }
+
+/**
+ *  Gets the width and height of the window.
+ */
+export const getDimensions = () => {
+  const { width, height } = window.screen;
+  return { width, height };
+};

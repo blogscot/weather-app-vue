@@ -36,12 +36,18 @@
 <script>
 import Weather from "./components/Weather";
 import AlertBox from "./components/AlertBox";
-import { toFahrenheit, toCelcius, fromKelvin, delay } from "./utils";
+import {
+  toFahrenheit,
+  toCelcius,
+  fromKelvin,
+  delay,
+  getDimensions
+} from "./utils";
 
 const updateInterval = 20 * 60 * 1000;
 
-// const devServer = null;
-const devServer = "http://localhost:3000";
+const devMode = true;
+const devServer = devMode ? "http://localhost:3000" : null;
 
 const states = [
   "SeekingPermission",
@@ -63,7 +69,7 @@ const LoadedImages = 6;
 const FetchImagesFailed = 7;
 
 const openWeatherMapPrefix = "https://api.openweathermap.org/data/2.5/weather?";
-const unsplashAPIPrefix = "https://api.unsplash.com/search/photos?client_id=";
+const unsplashAPIPrefix = "https://api.unsplash.com/photos/random?client_id=";
 
 export default {
   name: "App",
@@ -130,17 +136,21 @@ export default {
           } = image;
           return { alt_description, raw, name, html };
         });
-        console.log(imageData);
-
-        // TODO:
-        // 1. get the window size
-        // 2. build url for new unsplash image (use first one)
-        // 3. update the page's background image
+        this.updateBackground(imageData[1]);
 
         this.state = states[LoadedImages];
       } catch (e) {
         this.state = states[FetchImagesFailed];
       }
+    },
+    updateBackground(imageData) {
+      const { raw } = imageData;
+      const { width, height } = getDimensions();
+      const options = `&q=80&fm=jpg&crop=entropy&cs=tinysrgb&fit=crop&w=${width}&h=${height}`;
+      const unsplashImageURL = `${raw}${options}`;
+
+      const html = document.querySelector("html");
+      html.style.background = `url(${unsplashImageURL})`;
     },
     async fetchWeatherData() {
       return await fetch(`${devServer}/weather` || this.weatherAPIURL).then(
