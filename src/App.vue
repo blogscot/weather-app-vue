@@ -251,7 +251,6 @@ button:active {
 }
 html {
   background-size: cover;
-  background: url("https://www.eiseverywhere.com/file_uploads/a0488db4ce271e7ba5b8c4c4fff8ba4a_AventriBackgroundBW.jpg")
-    no-repeat center center fixed;
+  background: url("assets/background.jpg") no-repeat center center fixed;
 }
 </style>
