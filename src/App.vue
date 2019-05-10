@@ -126,19 +126,16 @@ export default {
 
       try {
         const conditions = this.weather.weather[0].main;
-        const images = await this.fetchWeatherImages(conditions);
+        const image = await this.fetchWeatherImage(conditions);
+        const {
+          alt_description,
+          urls: { raw },
+          user: { name },
+          links: { html }
+        } = image;
 
-        const imageData = images.map(image => {
-          const {
-            alt_description,
-            urls: { raw },
-            user: { name },
-            links: { html }
-          } = image;
-          return { alt_description, raw, name, html };
-        });
-        const rand = Math.floor(Math.random() * imageData.length);
-        this.updateBackground(imageData[rand]);
+        const imageData = { alt_description, raw, name, html };
+        this.updateBackground(imageData);
         this.state = states[LoadedImages];
       } catch (e) {
         this.state = states[FetchImagesFailed];
@@ -157,13 +154,13 @@ export default {
         response => response.json()
       );
     },
-    async fetchWeatherImages(conditions) {
+    async fetchWeatherImage(conditions) {
       const clientID = process.env.VUE_APP_UNSPLASH_CLIENT_ID;
       const unsplashAPIURL = `${unsplashAPIPrefix}${clientID}&query=${conditions}`;
       const response = await fetch(
         `${devServer}/unsplash` || unsplashAPIURL
       ).then(response => response.json());
-      return response.results;
+      return response;
     },
     toggleDisplay() {
       switch (this.displayMode) {
