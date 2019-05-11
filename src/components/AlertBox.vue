@@ -18,6 +18,16 @@ div.alert {
   width: 100%;
   background: #4caf50;
   color: #fff;
+  animation-name: start;
+  animation: fadein 1s;
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 div.info {
