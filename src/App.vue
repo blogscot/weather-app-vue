@@ -108,7 +108,6 @@ export default {
   methods: {
     async getWeatherData(position) {
       this.state = states[LoadingData];
-
       const {
         coords: { latitude, longitude }
       } = position;
@@ -122,6 +121,7 @@ export default {
         this.state = states[LoadedTemps];
       } catch (e) {
         this.state = states[FetchDataFailed];
+        return;
       }
 
       try {
