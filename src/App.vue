@@ -153,7 +153,7 @@ export default {
       const options = `&q=80&fm=jpg&crop=entropy&cs=tinysrgb&fit=crop&w=${width}&h=${height}`;
       const unsplashImageURL = `${raw}${options}`;
       const html = document.querySelector("html");
-      html.style.background = `url(${unsplashImageURL})`;
+      html.style.backgroundImage = `url(${unsplashImageURL})`;
     },
     async fetchWeatherData() {
       return await fetch(
@@ -254,7 +254,15 @@ button:active {
   box-shadow: 2px 2px 4px 0px #444;
 }
 html {
+  background-image: linear-gradient(
+    135deg,
+    #1c6ea4 0%,
+    #2388cb 39%,
+    #2798e2 100%
+  );
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  background: url("assets/background.jpg") no-repeat center center fixed;
 }
 </style>
