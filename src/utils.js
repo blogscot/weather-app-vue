@@ -22,5 +22,8 @@ export async function delay(amount) {
  */
 export const getDimensions = () => {
   const { width, height } = window.screen;
-  return { width, height };
+  // Allow for user to rotate device
+  return width > height
+    ? { width: width, height: width }
+    : { width: height, height: height };
 };
