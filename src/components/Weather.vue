@@ -78,7 +78,7 @@ export default {
 section {
   border: rgba(22, 22, 22, 0.4) solid 1px;
   width: 200px;
-  margin: 0 auto;
+  margin: 5px auto;
   padding: 1rem 1.2rem;
   font-size: 1rem;
   border-radius: 4px;

@@ -12,6 +12,12 @@
         :sys="weather.sys"
         :scale="scale"
       ></Weather>
+      <div v-if="state == 'LoadedImages'">
+        <Attribute
+          :photographer="photographer.name"
+          :link="photographer.html"
+        ></Attribute>
+      </div>
     </div>
     <AlertBox v-if="state == 'SeekingPermission'">
       <p>Welcome to the Weather App</p>
@@ -37,6 +43,7 @@
 <script>
 import Weather from "./components/Weather";
 import AlertBox from "./components/AlertBox";
+import Attribute from "./components/Attribute";
 import {
   toFahrenheit,
   toCelcius,
@@ -76,6 +83,7 @@ export default {
   name: "App",
   components: {
     AlertBox,
+    Attribute,
     Weather
   },
   async created() {
@@ -128,13 +136,13 @@ export default {
         const conditions = this.weather.weather[0].main;
         const image = await this.fetchWeatherImage(conditions);
         const {
-          alt_description,
           urls: { raw },
           user: { name },
           links: { html }
         } = image;
 
-        const imageData = { alt_description, raw, name, html };
+        this.photographer = { name, html };
+        const imageData = { raw, name, html };
         this.updateBackground(imageData);
         this.state = states[LoadedImages];
       } catch (e) {
@@ -210,10 +218,11 @@ export default {
   },
   data() {
     return {
-      temps: {},
       displayMode: "temp",
+      photographer: {},
       scale: "C",
       state: states[SeekingPermission],
+      temps: {},
       weather: {},
       weatherAPIURL: ""
     };
@@ -234,7 +243,7 @@ button {
   border-radius: 4px;
   font-size: 16px;
   padding: 8px 18px;
-  margin-bottom: 1rem;
+  margin: 0 2px 4px 2px;
   box-shadow: 2px 2px 4px 0px black;
   outline: none;
   opacity: 0.3;
