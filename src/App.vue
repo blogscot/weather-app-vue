@@ -54,8 +54,7 @@ import {
 
 const updateInterval = 20 * 60 * 1000;
 
-const devMode = true;
-const devServer = devMode ? "http://localhost:3000" : null;
+const devServer = process.env.VUE_APP_DEV_SERVER;
 
 const states = [
   "SeekingPermission",
