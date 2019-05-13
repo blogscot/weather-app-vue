@@ -27,4 +27,8 @@ export default {
 a {
   text-decoration: none;
 }
+div {
+  width: 95%;
+  margin: 8px auto 0;
+}
 </style>

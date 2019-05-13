@@ -13,6 +13,7 @@
       <div>Sunset: {{ fromUnixTime(sys.sunset) }}</div>
       <div>Taken at: {{ fromUnixTime(dt) }}</div>
     </div>
+    <slot></slot>
   </section>
   <section v-else>
     <div>Loading...</div>

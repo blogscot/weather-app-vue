@@ -11,13 +11,14 @@
         :dt="weather.dt"
         :sys="weather.sys"
         :scale="scale"
-      ></Weather>
-      <div v-if="state == 'LoadedImages'">
-        <Attribute
-          :photographer="photographer.name"
-          :link="photographer.html"
-        ></Attribute>
-      </div>
+      >
+        <div v-if="state == 'LoadedImages'">
+          <Attribute
+            :photographer="photographer.name"
+            :link="photographer.html"
+          ></Attribute>
+        </div>
+      </Weather>
     </div>
     <AlertBox v-if="state == 'SeekingPermission'">
       <p>Welcome to the Weather App</p>
