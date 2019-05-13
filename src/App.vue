@@ -142,15 +142,13 @@ export default {
         } = image;
 
         this.photographer = { name, html };
-        const imageData = { raw, name, html };
-        this.updateBackground(imageData);
+        this.updateBackground(raw);
         this.state = states[LoadedImages];
       } catch (e) {
         this.state = states[FetchImagesFailed];
       }
     },
-    updateBackground(imageData) {
-      const { raw } = imageData;
+    updateBackground(raw) {
       const { width, height } = getDimensions();
       const options = `&q=80&fm=jpg&crop=entropy&cs=tinysrgb&fit=crop&w=${width}&h=${height}`;
       const unsplashImageURL = `${raw}${options}`;
