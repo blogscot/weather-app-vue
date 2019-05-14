@@ -262,7 +262,8 @@ html {
   );
   background-attachment: fixed;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center center;
   background-size: cover;
+  min-height: 100%;
 }
 </style>
