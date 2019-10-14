@@ -1,10 +1,6 @@
-# Yet Weather App
+# Yet Another Weather App
 
 The weather app shows local weather information (assuming the user permits the browser to send its location, and the browser is capable). Once the weather data has been received from the [OpenWeatherMap](https://openweathermap.org/api) service, this is presented to the user in one of three possible modes, increasingly in levels of detail. The background image will update with a random image from Unsplash based on the obtained weather details. Lastly, the weather information auto updates every 20 mins.
-
-# Developer Notes
-
-During development both [JSON Server](https://www.npmjs.com/package/json-server#getting-started), to avoid constantly hitting the rate-limited APIs, and [Storybook](https://storybook.js.org/docs/guides/guide-vue/), to design the weather components, were used.
 
 ## Installation
 
